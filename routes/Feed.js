@@ -67,7 +67,7 @@ router.get("/characters/page/:page", cacheCharacters, (req, res) => {
 		});
 });
 
-router.get("/comics/page/:page", (req, res) => {
+router.get("/comics/page/:page", cacheComics, (req, res) => {
 	const baseUrl = "https://gateway.marvel.com:443/v1/public/comics";
 	const url = baseUrl + "?ts=" + ts + "&apikey=" + publickey + "&hash=" + hash;
 	console.log("Hitting Comics");
