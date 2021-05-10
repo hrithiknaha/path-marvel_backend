@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 router.get("/characters/page/:page", (req, res) => {
 	const baseUrl = "https://gateway.marvel.com:443/v1/public/characters";
 	const url = baseUrl + "?ts=" + ts + "&apikey=" + publickey + "&hash=" + hash;
-	// const urlWithPage = url + req.params.
+	console.log("Hitting Characters");
 	axios
 		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
 		.then(({ data }) => res.json(data.data));
@@ -24,7 +24,16 @@ router.get("/characters/page/:page", (req, res) => {
 router.get("/comics/page/:page", (req, res) => {
 	const baseUrl = "https://gateway.marvel.com:443/v1/public/comics";
 	const url = baseUrl + "?ts=" + ts + "&apikey=" + publickey + "&hash=" + hash;
+	console.log("Hitting Comics");
+	axios
+		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
+		.then(({ data }) => res.json(data.data));
+});
 
+router.get("/series/page/:page", (req, res) => {
+	const baseUrl = "https://gateway.marvel.com:443/v1/public/series";
+	const url = baseUrl + "?ts=" + ts + "&apikey=" + publickey + "&hash=" + hash;
+	console.log("Hitting Series");
 	axios
 		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
 		.then(({ data }) => res.json(data.data));
