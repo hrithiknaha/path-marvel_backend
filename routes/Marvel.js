@@ -10,9 +10,42 @@ const hash = md5(stringToHash);
 
 const client = require("../utils/redis");
 
-const cacheCharacters = require("../middleware/index");
-const cacheComics = require("../middleware/index");
-const cacheSeries = require("../middleware/index");
+const cacheCharacters = (req, res, next) => {
+	client.get("characters" + req.params.page, (err, data) => {
+		if (err) throw err;
+
+		if (data !== null) {
+			console.log(JSON.parse(data));
+			return res.json(JSON.parse(data));
+		} else {
+			next();
+		}
+	});
+};
+
+const cacheComics = (req, res, next) => {
+	client.get("comics" + req.params.page, (err, data) => {
+		if (err) throw err;
+
+		if (data !== null) {
+			return res.json(JSON.parse(data));
+		} else {
+			next();
+		}
+	});
+};
+
+const cacheSeries = (req, res, next) => {
+	client.get("series" + req.params.page, (err, data) => {
+		if (err) throw err;
+
+		if (data !== null) {
+			return res.json(JSON.parse(data));
+		} else {
+			next();
+		}
+	});
+};
 
 router.get("/", (req, res) => {
 	res.send("Marvel Base Route");
@@ -25,19 +58,23 @@ router.get("/characters/page/:page", cacheCharacters, (req, res) => {
 	axios
 		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
 		.then(({ data }) => {
-			client.setex("characters", 3600, JSON.stringify(data.data));
+			client.setex(
+				"characters" + req.params.page,
+				3600,
+				JSON.stringify(data.data)
+			);
 			return res.json(data.data);
 		});
 });
 
-router.get("/comics/page/:page", cacheComics, (req, res) => {
+router.get("/comics/page/:page", (req, res) => {
 	const baseUrl = "https://gateway.marvel.com:443/v1/public/comics";
 	const url = baseUrl + "?ts=" + ts + "&apikey=" + publickey + "&hash=" + hash;
 	console.log("Hitting Comics");
 	axios
 		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
 		.then(({ data }) => {
-			client.setex("comics", 3600, JSON.stringify(data.data));
+			client.setex("comics" + req.params.page, 3600, JSON.stringify(data.data));
 			return res.json(data.data);
 		});
 });
@@ -49,7 +86,7 @@ router.get("/series/page/:page", cacheSeries, (req, res) => {
 	axios
 		.get(url + "&offset=" + 20 * req.params.page + "&limit=20")
 		.then(({ data }) => {
-			client.setex("series", 3600, JSON.stringify(data.data));
+			client.setex("series" + req.params.page, 3600, JSON.stringify(data.data));
 			return res.json(data.data);
 		});
 });
