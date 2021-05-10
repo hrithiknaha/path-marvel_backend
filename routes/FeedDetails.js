@@ -22,7 +22,6 @@ router.get("/characters/:id", (req, res) => {
 		publickey +
 		"&hash=" +
 		hash;
-	console.log(url);
 	console.log("Hitting Individual Characters");
 
 	axios
@@ -42,7 +41,7 @@ router.get("/comics/:id", (req, res) => {
 		publickey +
 		"&hash=" +
 		hash;
-	console.log(url);
+
 	console.log("Hitting Individual Comics");
 
 	axios
@@ -62,7 +61,7 @@ router.get("/series/:id", (req, res) => {
 		publickey +
 		"&hash=" +
 		hash;
-	console.log(url);
+
 	console.log("Hitting Individual Series");
 
 	axios
