@@ -64,7 +64,8 @@ router.get("/characters/page/:page", cacheCharacters, (req, res) => {
 				JSON.stringify(data.data)
 			);
 			return res.json(data.data);
-		});
+		})
+		.catch(({ response }) => res.json(response.data));
 });
 
 router.get("/comics/page/:page", cacheComics, (req, res) => {
@@ -76,7 +77,8 @@ router.get("/comics/page/:page", cacheComics, (req, res) => {
 		.then(({ data }) => {
 			client.setex("comics" + req.params.page, 3600, JSON.stringify(data.data));
 			return res.json(data.data);
-		});
+		})
+		.catch(({ response }) => res.json(response.data));
 });
 
 router.get("/series/page/:page", cacheSeries, (req, res) => {
@@ -88,7 +90,8 @@ router.get("/series/page/:page", cacheSeries, (req, res) => {
 		.then(({ data }) => {
 			client.setex("series" + req.params.page, 3600, JSON.stringify(data.data));
 			return res.json(data.data);
-		});
+		})
+		.catch(({ response }) => res.json(response.data));
 });
 
 module.exports = router;
